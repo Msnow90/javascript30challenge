@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div class="container">
+      <div data-key="65" class="col-lg-2 keys">
+        <p class="key">A</p>
+        <p class="keycode">Snare</p>
+      </div>
+    </div>
+
+    <audio data-key="65" src="sounds/snare.mp3">Snare</audio>
+
+    <script>
+
+      window.addEventListener('keydown', function(e) {
+        const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+        const icon = document.querySelector(`.keys[data-key="${e.keyCode}"]`);
+        //stop if no audio exists for key
+        if (!audio)
+        {
+          return;
+        }
+        //set audio current time to 0, so that when you press a sound key again,
+        //instead of waiting for the previous soundclip to end, it resets
+        audio.currentTime = 0;
+        audio.play();
+
+        icon.classList.add('playing');
+
+        // set up transition event to change key class back to orginal, since it's more efficient than a timeout
+        const keys = document.querySelectorAll('.keys');
+        keys.forEach(function(key) {
+          // this event listener fires each time one property is done on css animation end (so many events get fired)
+          key.addEventListener('transitionend', function(e) {
+            if (e.propertyName !== 'transform') //skip it if it's not a transform
+            {
+              return;
+            }
+            // this context applies to the element that called the event
+            this.classList.remove('playing');
+          }, false)
+        })
+
+        /* Javascript class adjustments:
+          *selector*.classList.add
+                              .remove
+                              .toggle
+        */
+      }, false);
+
+
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </body>
+</html>
